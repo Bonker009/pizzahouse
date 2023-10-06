@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\PizzaController;
 use Illuminate\Support\Facades\Route;
+use \Illuminate\Support\Facades\Auth;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -17,5 +19,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/pizza', [PizzaController::class, 'index']);
-Route::get('/pizza/{id}', [PizzaController::class, 'show']);
+Route::get('/pizzas', [PizzaController::class, 'index'])->name("pizza.index")->middleware("auth");
+Route::get("/pizzas/create", [PizzaController::class, "create"])->name("pizza.create");
+Route::get('/pizzas/{id}', [PizzaController::class, 'show'])->name("pizza.show");
+Route::post("/pizzas", [PizzaController::class, "store"])->name("pizza.store")->middleware("auth");
+Route::delete("/pizzas/{id}", [PizzaController::class, "destroy"])->name("pizza.destroy")->middleware("auth");
+
+Auth::routes([
+    'register' => false
+]);
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
